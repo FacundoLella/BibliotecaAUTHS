@@ -2,18 +2,21 @@ version: '3'
 
 services:
   bibliotecaauth2:
-    build: bibliotecaauth2
+    build:
+      context: ./bibliotecaauth2   # 👈 usa la carpeta como contexto
+      dockerfile: Dockerfile
     mem_limit: 512m
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://bibliotecadb:3306/bibliotecaauth2
+      SPRING_DATASOURCE_URL: jdbc:mysql://bibliotecadb:3306/bibliotecadb
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
     restart: always
     depends_on:
       bibliotecadb:
         condition: service_healthy
+
   bibliotecadb:
     image: mysql:8.0.43
     ports:
@@ -24,9 +27,6 @@ services:
       MYSQL_DATABASE: bibliotecadb
     restart: always
     healthcheck:
-      test: ["CMD","mysqladmin","ping","-h","localhost"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       timeout: 10s
       retries: 10
-      
-    
-    
